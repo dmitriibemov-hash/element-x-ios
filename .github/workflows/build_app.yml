@@ -15,17 +15,20 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
-      - name: Setup Environment
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup Project
         run: |
-          # Установка pnpm через официальный метод
-          curl -fsSL https://get.pnpm.io/install.sh | sh -
-          export PNPM_HOME="$HOME/.local/share/pnpm"
-          export PATH="$PNPM_HOME:$PATH"
-          
-          # Установка зависимостей проекта
           pnpm install
-          
-          # Генерация файлов проекта (XcodeGen )
           swift run -q tools ci setup-project
 
       - name: Install CocoaPods
