@@ -24,11 +24,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          # Убрали cache: 'pnpm', чтобы избежать ошибки с lock-файлом
 
       - name: Setup Project
         run: |
+          # Установка зависимостей в папке Tools, где лежит pnpm-lock.yaml
+          cd Tools
           pnpm install
+          cd ..
+          # Генерация файлов проекта
           swift run -q tools ci setup-project
 
       - name: Install CocoaPods
@@ -44,6 +48,7 @@ jobs:
                      -destination 'generic/platform=iOS Simulator' \
                      -derivedDataPath build \
                      -configuration Debug \
+                     -sdk iphonesimulator \
                      build
 
       - name: Package App
