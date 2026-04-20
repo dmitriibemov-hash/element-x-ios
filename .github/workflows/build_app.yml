@@ -1,64 +1,22 @@
-name: Build iOS App
+name: Build iOS App (Diagnostic)
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build App
+  diagnose:
+    name: Diagnose Structure
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
         with:
           lfs: true
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          # Убрали cache: 'pnpm', чтобы избежать ошибки с lock-файлом
-
-      - name: Setup Project
+      - name: List Files
         run: |
-          # Установка зависимостей в папке Tools, где лежит pnpm-lock.yaml
-          cd Tools
-          pnpm install
-          cd ..
-          # Генерация файлов проекта
-          swift run -q tools ci setup-project
-
-      - name: Install CocoaPods
-        run: |
-          cd ElementX
-          pod install
-          cd ..
-
-      - name: Build for Simulator
-        run: |
-          xcodebuild -workspace ElementX/ElementX.xcworkspace \
-                     -scheme ElementX \
-                     -destination 'generic/platform=iOS Simulator' \
-                     -derivedDataPath build \
-                     -configuration Debug \
-                     -sdk iphonesimulator \
-                     build
-
-      - name: Package App
-        run: |
-          cd build/Build/Products/Debug-iphonesimulator
-          zip -r ElementX.app.zip ElementX.app
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ElementX-iOS-App
-          path: build/Build/Products/Debug-iphonesimulator/ElementX.app.zip
-          retention-days: 5
+          echo "--- Root Directory ---"
+          ls -F
+          echo "--- Searching for package.json ---"
+          find . -name "package.json" -maxdepth 3
+          echo "--- Searching for pnpm-lock.yaml ---"
+          find . -name "pnpm-lock.yaml" -maxdepth 3
