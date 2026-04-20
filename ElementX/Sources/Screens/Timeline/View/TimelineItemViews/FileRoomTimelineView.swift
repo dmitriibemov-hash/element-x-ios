@@ -81,7 +81,7 @@ struct MediaFileRoomTimelineContent: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(filename)
                     .foregroundStyle(.compound.textPrimary)
-                    .font(.compound.bodyLG)
+                    .font(.compound.bodyLG.bold())
                 Text(fileDescription)
                     .font(.compound.bodySM)
                     .foregroundStyle(.compound.textSecondary)
@@ -96,7 +96,7 @@ struct MediaFileRoomTimelineContent: View {
                 .background(.compound.iconOnSolidPrimary,
                             in: RoundedRectangle(cornerRadius: 4, style: .continuous))
         }
-        .labelStyle(.custom(spacing: 8, alignment: .center))
+        .labelStyle(.custom(spacing: 12, alignment: .center))
         .padding(.horizontal, 4) // Add to the styler's padding of 8, as we use the default insets for the caption.
     }
 }

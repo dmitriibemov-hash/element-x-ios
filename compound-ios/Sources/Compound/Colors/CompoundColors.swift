@@ -122,3 +122,17 @@ private extension String {
         return characterCodeSum % Color.compound.decorativeColors.count
     }
 }
+
+
+// MARK: - Custom Colors for Design Improvement
+
+public extension CompoundColors {
+    static var custom: CompoundColors {
+        let colors = CompoundColors()
+        // Пример: изменение основного цвета текста на синий
+        colors.override(\.textPrimary, with: Color(red: 0.0, green: 0.0, blue: 1.0)) 
+        // Пример: изменение цвета фона по умолчанию на светло-серый
+        colors.override(\.bgCanvasDefault, with: Color(red: 0.94, green: 0.94, blue: 0.94))
+        return colors
+    }
+}
