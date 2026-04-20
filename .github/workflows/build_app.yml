@@ -15,10 +15,21 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
-      - name: Install dependencies
+      - name: Setup Environment
         run: |
-          brew install pnpm
+          # Установка pnpm через официальный метод
+          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          export PNPM_HOME="$HOME/.local/share/pnpm"
+          export PATH="$PNPM_HOME:$PATH"
+          
+          # Установка зависимостей проекта
           pnpm install
+          
+          # Генерация файлов проекта (XcodeGen )
+          swift run -q tools ci setup-project
+
+      - name: Install CocoaPods
+        run: |
           cd ElementX
           pod install
           cd ..
@@ -29,6 +40,7 @@ jobs:
                      -scheme ElementX \
                      -destination 'generic/platform=iOS Simulator' \
                      -derivedDataPath build \
+                     -configuration Debug \
                      build
 
       - name: Package App
